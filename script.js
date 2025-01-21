@@ -1,3 +1,87 @@
+const translations = {
+    ru: {
+        title: 'Волшебный поединок',
+        analyze: 'Анализировать ход',
+        depth: 'Глубина',
+        moon: 'Луна',
+        sun: 'Солнце',
+        moonTurn: 'Ход луны',
+        sunTurn: 'Ход солнца',
+        vs: 'VS',
+        topMoves: 'Топ 5 лучших ходов для',
+        move: 'Ход',
+        score: 'Оценка',
+        positionalMove: 'Позиционный ход',
+        noMoves: 'Нет доступных ходов для анализа',
+        winningMove: 'Выигрышный ход',
+        blockThreat: 'Блокировка угрозы',
+        strongThreat: 'Сильная угроза',
+        developAttack: 'Развитие атаки'
+    },
+    en: {
+        title: 'Wizard Duel',
+        analyze: 'Analyze Move',
+        depth: 'Depth',
+        moon: 'Moon',
+        sun: 'Sun',
+        moonTurn: 'Moon\'s turn',
+        sunTurn: 'Sun\'s turn',
+        vs: 'VS',
+        topMoves: 'Top 5 best moves for',
+        move: 'Move',
+        score: 'Score',
+        positionalMove: 'Positional move',
+        noMoves: 'No moves available for analysis',
+        winningMove: 'Winning move',
+        blockThreat: 'Block threat',
+        strongThreat: 'Strong threat',
+        developAttack: 'Develop attack'
+    }
+};
+
+// Функция для изменения языка
+function changeLang(lang) {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.lang === lang) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Обновляем текст
+    document.querySelector('h1').textContent = translations[lang].title;
+    document.querySelector('#analyzeButton').textContent = translations[lang].analyze;
+    document.querySelector('#player1 span').textContent = translations[lang].moon;
+    document.querySelector('#player2 span').textContent = translations[lang].sun;
+    document.querySelector('.vs').textContent = translations[lang].vs;
+    
+    // Обновляем текст глубины
+    const depthSelect = document.querySelector('#depthSelect');
+    Array.from(depthSelect.options).forEach(option => {
+        option.textContent = `${translations[lang].depth} ${option.value}`;
+    });
+
+    // Обновляем текст анализа, если он есть
+    const analysisResults = document.querySelector('#analysis-results');
+    if (analysisResults && analysisResults.innerHTML.trim() !== '') {
+        // Перезапускаем анализ для обновления текста
+        document.querySelector('#analyzeButton').click();
+    }
+
+    // Сохраняем выбранный язык
+    currentLang = lang;
+}
+
+// Глобальная переменная для текущего языка
+let currentLang = 'ru';
+
+// Добавляем обработчики событий для кнопок языка
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => changeLang(btn.dataset.lang));
+    });
+});
+
 class WizardDuel {
     constructor() {
         this.gridSize = 15;
@@ -55,13 +139,13 @@ class WizardDuel {
         console.timeEnd('Analysis');
 
         if (analysis.length === 0) {
-            document.getElementById('analysis-results').innerHTML = 'Нет доступных ходов для анализа';
+            document.getElementById('analysis-results').innerHTML = translations[currentLang].noMoves;
             return;
         }
 
         // Показываем результаты анализа
         const resultsDiv = document.getElementById('analysis-results');
-        resultsDiv.innerHTML = `<strong>Топ 5 лучших ходов для ${this.currentPlayer === 'moon' ? 'луны' : 'солнца'}:</strong><br>`;
+        resultsDiv.innerHTML = `<strong>${translations[currentLang].topMoves} ${this.currentPlayer === 'moon' ? translations[currentLang].moon : translations[currentLang].sun}:</strong><br>`;
         
         // Подсвечиваем ходы на доске
         analysis.forEach((move, index) => {
@@ -83,8 +167,8 @@ class WizardDuel {
             }
 
             // Добавляем информацию в результаты
-            resultsDiv.innerHTML += `${index + 1}. Ход: [${move.row}, ${move.col}], ` +
-                `Оценка: ${Math.round(move.score)}, ` +
+            resultsDiv.innerHTML += `${index + 1}. ${translations[currentLang].move}: [${move.row}, ${move.col}], ` +
+                `${translations[currentLang].score}: ${Math.round(move.score)}, ` +
                 `${move.description}<br>`;
         });
     }
@@ -102,12 +186,12 @@ class WizardDuel {
 
         if (this.checkWin(row, col)) {
             this.gameOver = true;
-            this.updateStatus(`${this.currentPlayer === 'moon' ? 'Луна' : 'Солнце'} победил!`);
+            this.updateStatus(`${this.currentPlayer === 'moon' ? translations[currentLang].moon : translations[currentLang].sun} ${translations[currentLang].winningMove}`);
             return;
         }
 
         this.currentPlayer = this.currentPlayer === 'moon' ? 'sun' : 'moon';
-        this.updateStatus(`Ход ${this.currentPlayer === 'moon' ? 'луны' : 'солнца'}`);
+        this.updateStatus(`${translations[currentLang].moonTurn} ${this.currentPlayer === 'moon' ? translations[currentLang].moon : translations[currentLang].sun}`);
         
         // Анализируем после каждого хода
         const depth = parseInt(document.getElementById('depthSelect').value);
@@ -172,20 +256,20 @@ class WizardDuel {
         // Показываем результаты
         analysisResults.innerHTML = `
             <div class="moon-moves">
-                <h3>🌙 Топ 5 ходов для луны:</h3>
+                <h3>${translations[currentLang].topMoves} ${translations[currentLang].moon}:</h3>
                 ${moonMoves.map((move, index) => 
-                    `${index + 1}. Ход: [${move.row}, ${move.col}], ` +
-                    `Оценка: ${Math.round(move.score)}, ` +
-                    `Приоритет: ${move.description}`
+                    `${index + 1}. ${translations[currentLang].move}: [${move.row}, ${move.col}], ` +
+                    `${translations[currentLang].score}: ${Math.round(move.score)}, ` +
+                    `${move.description}`
                 ).join('<br>')}
             </div>
             <br>
             <div class="sun-moves">
-                <h3>☀️ Топ 5 ходов для солнца:</h3>
+                <h3>${translations[currentLang].topMoves} ${translations[currentLang].sun}:</h3>
                 ${sunMoves.map((move, index) => 
-                    `${index + 1}. Ход: [${move.row}, ${move.col}], ` +
-                    `Оценка: ${Math.round(move.score)}, ` +
-                    `Приоритет: ${move.description}`
+                    `${index + 1}. ${translations[currentLang].move}: [${move.row}, ${move.col}], ` +
+                    `${translations[currentLang].score}: ${Math.round(move.score)}, ` +
+                    `${move.description}`
                 ).join('<br>')}
             </div>
         `;
@@ -219,7 +303,7 @@ class WizardEngine {
         const blockingMove = this.findWinningMove(opponent);
         if (blockingMove) {
             blockingMove.score = 900;
-            blockingMove.description = "Блокировка победы";
+            blockingMove.description = translations[currentLang].blockThreat;
             return [blockingMove];
         }
 
@@ -245,7 +329,7 @@ class WizardEngine {
                             row: i,
                             col: j,
                             score: 1000,
-                            description: "Победный ход"
+                            description: translations[currentLang].winningMove
                         };
                     }
                     this.board[i][j] = null;
@@ -272,7 +356,7 @@ class WizardEngine {
                     threats.push({
                         row, col,
                         score: score,
-                        description: score === threatScore ? "Создание угрозы" : "Блокировка угрозы"
+                        description: score === threatScore ? translations[currentLang].strongThreat : translations[currentLang].blockThreat
                     });
                 }
             }
@@ -417,12 +501,12 @@ class WizardEngine {
     }
 
     getDescription(score) {
-        if (score >= 1000) return "Победный ход";
-        if (score >= 800) return "Форсированная победа";
-        if (score >= 600) return "Блокировка угрозы";
-        if (score >= 400) return "Сильная угроза";
-        if (score >= 200) return "Развитие атаки";
-        return "Позиционный ход";
+        if (score >= 1000) return translations[currentLang].winningMove;
+        if (score >= 800) return translations[currentLang].blockThreat;
+        if (score >= 600) return translations[currentLang].strongThreat;
+        if (score >= 400) return translations[currentLang].strongThreat;
+        if (score >= 200) return translations[currentLang].developAttack;
+        return translations[currentLang].positionalMove;
     }
 
     checkWin(row, col, player) {
