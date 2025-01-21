@@ -5,8 +5,8 @@ const translations = {
         depth: 'Глубина',
         moon: 'Луна',
         sun: 'Солнце',
-        moonTurn: 'Ход луны',
-        sunTurn: 'Ход солнца',
+        moonTurn: 'Ход Луны',
+        sunTurn: 'Ход Солнца',
         vs: 'VS',
         topMoves: 'Топ 5 лучших ходов для',
         move: 'Ход',
@@ -16,7 +16,9 @@ const translations = {
         winningMove: 'Выигрышный ход',
         blockThreat: 'Блокировка угрозы',
         strongThreat: 'Сильная угроза',
-        developAttack: 'Развитие атаки'
+        developAttack: 'Развитие атаки',
+        moonWins: 'Луна победила!',
+        sunWins: 'Солнце победило!'
     },
     en: {
         title: 'Wizard Duel',
@@ -35,7 +37,9 @@ const translations = {
         winningMove: 'Winning move',
         blockThreat: 'Block threat',
         strongThreat: 'Strong threat',
-        developAttack: 'Develop attack'
+        developAttack: 'Develop attack',
+        moonWins: 'Moon wins!',
+        sunWins: 'Sun wins!'
     }
 };
 
@@ -110,7 +114,7 @@ class WizardDuel {
             }
         }
         
-        this.updateStatus('Ход луны');
+        this.updateStatus(translations[currentLang].moonTurn);
     }
 
     initializeControls() {
@@ -186,12 +190,12 @@ class WizardDuel {
 
         if (this.checkWin(row, col)) {
             this.gameOver = true;
-            this.updateStatus(`${this.currentPlayer === 'moon' ? translations[currentLang].moon : translations[currentLang].sun} ${translations[currentLang].winningMove}`);
+            this.updateStatus(this.currentPlayer === 'moon' ? translations[currentLang].moonWins : translations[currentLang].sunWins);
             return;
         }
 
         this.currentPlayer = this.currentPlayer === 'moon' ? 'sun' : 'moon';
-        this.updateStatus(`${translations[currentLang].moonTurn} ${this.currentPlayer === 'moon' ? translations[currentLang].moon : translations[currentLang].sun}`);
+        this.updateStatus(translations[currentLang][this.currentPlayer + 'Turn']);
         
         // Анализируем после каждого хода
         const depth = parseInt(document.getElementById('depthSelect').value);
