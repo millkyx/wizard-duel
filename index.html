@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Волшебный поединок</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>Волшебный поединок</h1>
+            <div class="players">
+                <div class="player" id="player1">
+                    <img src="moon.png" alt="Луна" width="24" height="24">
+                    <span>Луна</span>
+                </div>
+                <div class="vs">VS</div>
+                <div class="player" id="player2">
+                    <img src="sun.png" alt="Солнце" width="24" height="24">
+                    <span>Солнце</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="analyzeButton">Анализировать ход</button>
+                <select id="depthSelect">
+                    <option value="2">Глубина 2</option>
+                    <option value="3">Глубина 3</option>
+                    <option value="4" selected>Глубина 4</option>
+                    <option value="5">Глубина 5</option>
+                </select>
+            </div>
+            <div id="game-board"></div>
+            <div id="analysis-results" class="analysis-results"></div>
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
